@@ -6,6 +6,7 @@ This is a classic snake game with implementation of queue data structure for the
 Built with: Vanila Javascript, HTML and CSS
 
 ## Setup and usage
+- [Live page](https://public.bc.fi/s2200738/snakegame/)
 
 ## Screenshot
 
@@ -13,7 +14,7 @@ Built with: Vanila Javascript, HTML and CSS
 
 ## Sources 
 
-- [Youtube video of Kenny Yip Coding] (How to code snake game in JavaScript)
+- [Youtube video of Kenny Yip Coding] (https://www.youtube.com/watch?v=baBq5GAL0_U)
 
 ## Authors and acknowledgment
 Dang Le

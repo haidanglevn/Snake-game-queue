@@ -12,16 +12,27 @@ let snakeY = blockSize * 5;
 let velocityX = 0;
 let velocityY = 0;
 
-// snake body
-let snakeBody = [];
+class Queue {
+  constructor() {
+    this.items = [];
+  }
 
-class Snake {
-    constructor() {
-        this.snakeBody = [
-            
-        ]
-    }
+  enqueue(item) {
+    this.items.push(item);
+  }
+
+  dequeue() {
+    return this.items.shift();
+  }
+
+  getSize() {
+    return this.items.length;
+  }
 }
+const snakeBody = new Queue();
+
+snakeBody.enqueue([snakeX, snakeY]);
+let snakeLength = snakeBody.getSize();
 
 // food
 let foodX;
@@ -30,6 +41,16 @@ let foodY;
 // points and game over
 let gameOver = false;
 
+function stopGame() {
+  gameOver = true;
+  document.getElementById("alert").innerHTML = "Game Over!";
+}
+
+function reset() {
+    location.reload();
+}
+
+// game function
 window.onload = function () {
   board = document.getElementById("board");
   board.height = row * blockSize;
@@ -53,29 +74,42 @@ function update() {
   context.fillRect(foodX, foodY, blockSize, blockSize);
 
   if (snakeX == foodX && snakeY == foodY) {
-    snakeBody.push([foodX, foodY]);
+    snakeBody.enqueue([foodX, foodY]);
+    snakeLength += 1;
     placeFood();
   }
 
   // make all the snake body attached to each other
-  for (let i = snakeBody.length - 1; i > 0; i--) {
-    snakeBody[i] = snakeBody[i - 1];
+  for (let i = snakeLength - 1; i > 0; i--) {
+    snakeBody.items[i] = snakeBody.items[i - 1];
   }
-  if (snakeBody.length) {
-    snakeBody[0] = [snakeX, snakeY];
+  if (snakeLength) {
+    snakeBody.items[0] = [snakeX, snakeY];
+    document.getElementById("point").innerHTML = snakeLength;
+  }
 
-    document.getElementById("point").innerHTML = snakeBody.length;
-  }
-  // draw the snake head
-  context.fillStyle = "lime";
-  snakeX += velocityX * blockSize;
-  snakeY += velocityY * blockSize;
-  context.fillRect(snakeX, snakeY, blockSize, blockSize);
+  
 
   // draw the whole snake
-  for (let i = 0; i < snakeBody.length; i++) {
-    context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
+  snakeX += velocityX * blockSize;
+  snakeY += velocityY * blockSize;
+  
+  for (let i = 0; i < snakeLength; i++) {
+    context.fillStyle = "lime";
+    context.fillRect(
+      snakeBody.items[i][0],
+      snakeBody.items[i][1],
+      blockSize,
+      blockSize
+    );
   }
+  context.fillStyle = "yellow";
+  context.fillRect(
+    snakeBody.items[0][0],
+    snakeBody.items[0][1],
+    blockSize,
+    blockSize
+  );
 
   // game over conditions
   if (
@@ -87,8 +121,8 @@ function update() {
     gameOver = true;
     document.getElementById("alert").innerHTML = "Game Over!";
   }
-  for (let i = 0; i < snakeBody.length; i++) {
-    if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) {
+  for (let i = 1; i < snakeLength; i++) {
+    if (snakeX == snakeBody.items[i][0] && snakeY == snakeBody.items[i][1]) {
       gameOver = true;
       document.getElementById("alert").innerHTML = "Game Over!";
     }
